@@ -32,6 +32,7 @@ class Todo {
     );
   }
 
+  // to json methord
   Map<String,dynamic>toJson(){
     return{
       'title':title,

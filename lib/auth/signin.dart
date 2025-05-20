@@ -1,3 +1,4 @@
+import 'package:daily_reminder/auth/auth.dart';
 import 'package:daily_reminder/auth/login.dart';
 import 'package:flutter/material.dart';
 
@@ -26,11 +27,32 @@ class _SigninState extends State<Signin> {
 
   final RegExp usernameRegExp = RegExp(r'^[a-zA-Z0-9_]+$');
 
-  void submit() {
+  void submit() async {
     if (_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Sign in successful!"),backgroundColor: Colors.green,));
+      try {
+        await Auth().createUserWithEmailAndPassword(
+          email: _emailController.text,
+          password: _passController.text,
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Registration successful!"),
+            backgroundColor: Colors.green,
+          ),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Error: ${e.toString()}"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
@@ -177,7 +199,10 @@ class _SigninState extends State<Signin> {
                         Column(
                           children: [
                             OutlinedButton.icon(
-                              onPressed: () {},
+                              onPressed: () async {
+                                await Auth().loginwithGoogle();
+                              },
+
                               // icon: Image.asset(
                               //   'assets/image/google_logo.png',
                               //   height: 80,

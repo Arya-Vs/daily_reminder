@@ -1,9 +1,11 @@
+import 'package:daily_reminder/auth/auth.dart';
 import 'package:daily_reminder/auth/guest.dart';
 import 'package:daily_reminder/auth/login.dart';
 import 'package:daily_reminder/auth/signin.dart';
 import 'package:daily_reminder/home.dart';
 import 'package:daily_reminder/splash/splash.dart';
 import 'package:daily_reminder/todo_bloc/todo_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +43,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return MaterialApp(
       title: 'Todo app',
      
@@ -49,7 +52,19 @@ class MyApp extends StatelessWidget {
       //   create: (context) => TodoBloc()..add(TodoStarted()),
       //   child: HomeScreen(),
       // ),
-      home: GuestScreen(),
+      home: StreamBuilder<User?>(stream: Auth().authStateChanges, 
+      builder: (context,snapshot){
+        if(snapshot.connectionState == ConnectionState.waiting){
+         return SplashScreen();
+        //  return HomeScreen();
+        }else if(snapshot.hasData){
+          return HomeScreen();
+        }else{
+          return GuestScreen();
+          //  return HomeScreen();
+
+        }
+      })
     );
   }
 }

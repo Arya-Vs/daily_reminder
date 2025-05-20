@@ -1,4 +1,6 @@
+import 'package:daily_reminder/auth/auth.dart';
 import 'package:daily_reminder/home.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -8,10 +10,55 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
+String?errorMessage="";
+bool isLogin=true;
+
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
+
+Future<void>signInWithEmailAndPassword()async{
+  try {
+    await Auth().signInWithEmailAndPassword(email: _emailController.text, password: _passController.text);
+  } on FirebaseAuthException catch (e) {
+    setState(() {
+      errorMessage=e.message;
+    });
+    
+  }
+
+}
+
+Future<void>createUserWithEmailAndPassword()async{
+  try{
+    await Auth().createUserWithEmailAndPassword(email: _emailController.text, password: _passController.text);
+  }on FirebaseException catch(e){
+    setState(() {
+      errorMessage=e.message;
+    });
+  }
+}
+
+Widget _title(){
+  return Text("Firebase Auth");
+}
+Widget _entryField(
+  String title,
+  TextEditingController controller,
+){
+  return TextField(
+    controller: controller,
+    decoration: InputDecoration(
+      labelText: title
+
+    ),
+  );
+}
+
+Widget _errorMessage(){
+  return Text(errorMessage == '' ? '': 'Humm ? $errorMessage');
+}
 
   @override
   void dispose() {
@@ -20,17 +67,24 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void submit() {
-    if (_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Sign in successful!"),backgroundColor: Colors.green,));
+  void submit() async {
+  if (_formKey.currentState!.validate()) {
+    await signInWithEmailAndPassword(); // <-- Call login here
+
+    if (Auth().currentUser != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Sign in successful!"), backgroundColor: Colors.green),
+      );
       Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const HomeScreen()),
-    );
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
     }
   }
+}
+
+
+
 
   @override
   Widget build(BuildContext context) {
