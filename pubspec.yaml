@@ -51,6 +51,10 @@ dependencies:
   cloud_firestore: ^5.6.8
   provider: ^6.1.5
   table_calendar: ^3.2.0
+  isar_generator: ^3.1.0+1
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+
 
 dev_dependencies:
   flutter_test:
