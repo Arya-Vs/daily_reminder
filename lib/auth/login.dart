@@ -60,28 +60,33 @@ Widget _errorMessage(){
   return Text(errorMessage == '' ? '': 'Humm ? $errorMessage');
 }
 
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passController.dispose();
-    super.dispose();
-  }
 
   void submit() async {
   if (_formKey.currentState!.validate()) {
-    await signInWithEmailAndPassword(); // <-- Call login here
+    await signInWithEmailAndPassword();
 
     if (Auth().currentUser != null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Sign in successful!"), backgroundColor: Colors.green),
+        SnackBar(
+          content: Text("Sign in successful!"),
+          backgroundColor: Colors.green,
+        ),
       );
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Invalid email or password"),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 }
+
 
 
 
@@ -165,7 +170,6 @@ Widget _errorMessage(){
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () {
-                    // TODO: Navigate to Forgot Password screen
                     print("Forgot Password tapped");
                   },
                   child: Text(
