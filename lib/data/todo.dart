@@ -1,52 +1,19 @@
 class Todo {
+  final String id;
   final String title;
-  final String subtitle;
-  bool isDone;
+  final bool isCompleted;
 
   Todo({
-    this.title='',
-    this.subtitle='',
-    this.isDone=false
-  }) ;
+    required this.id,
+    required this.title,
+    this.isCompleted = false,
+  });
 
-  Todo copywith({
-    String? title,
-    String? subtitle,
-    bool? isDone
-  }){
-
+  Todo copyWith({String? id, String? title, bool? isCompleted}) {
     return Todo(
+      id: id ?? this.id,
       title: title ?? this.title,
-      subtitle: subtitle ?? this.subtitle,
-      isDone: isDone ?? this.isDone,
+      isCompleted: isCompleted ?? this.isCompleted,
     );
   }
-
-  // from json methord
-
-  factory Todo.fromJson(Map<String,dynamic> json){
-    return Todo(
-      title: json['title'],
-      subtitle: json['subtitle'],
-      isDone:json['isDone'],
-    );
-  }
-
-  // to json methord
-  Map<String,dynamic>toJson(){
-    return{
-      'title':title,
-      'subtitle':subtitle,
-      'isDone':isDone,
-
-    };
-  }
-  @override
- String toString(){
-  return '''Todo:{
-  title: $title\n
-  subtitle:$subtitle\n
-  isDone:$isDone\n
-  }''';
- }
 }

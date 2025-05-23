@@ -91,7 +91,7 @@ class _GuestScreenState extends State<GuestScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => HomeScreen(),
+                        builder: (_) => HomePage(),
                       ),
                     );
                   },
